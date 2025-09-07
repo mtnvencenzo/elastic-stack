@@ -60,18 +60,12 @@ services:
       - xpack.security.enabled=false # For development, disable security
     ports:
       - "8200:8200" # APM Server intake port
-    healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:8200 || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 24
-      start_period: 30s # Give APM Server time to start before health checks begin
     restart: unless-stopped
     depends_on:
       elasticsearch:
         condition: service_healthy
       kibana:
-        condition: service_healthy
+        condition: service_healthy # Technically not dependent ubt gives a visual indicator that Kibana is up (its slow to start)
     networks:
       - elastic-network
 
