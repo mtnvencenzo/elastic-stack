@@ -39,6 +39,12 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 
 	```
 
+	To force a rebuild and deploy of an individual container use this command
+
+	```
+	docker compose up --force-recreate --no-deps --build <service_name>
+	```
+
 3. **Send Telemetry Data:**
 	- Point your application(s) to the Open Telemetry Collector endpoint (as defined in `otel-collector-config.yml`).
       - http://localhost:4317 (when outside the compose network)
