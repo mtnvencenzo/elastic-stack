@@ -5,10 +5,16 @@ receivers:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
+        auth: # Adjust or remove the auth settings as needed.
+          authenticator: bearertokenauth/server
       http:
         endpoint: "0.0.0.0:4318"
+        auth: # Adjust or remove the auth settings as needed.
+          authenticator: bearertokenauth/server
         cors:
-          allowed_origins: ["*"] # Allow all origins for testing; restrict in production.
+          allowed_origins: ["https://localhost:4001"] # Adjust or remove the cors settings as needed.
+          allowed_headers: ["*"]
+          max_age: 600
 
   hostmetrics:
     collection_interval: 10m # default = 1m
@@ -31,7 +37,15 @@ exporters:
     tls:
       insecure: true # Use this for local testing only; use proper TLS in production.
 
+extensions:
+  bearertokenauth/server: # Adjust or remove the auth settings as needed.
+    tokens:
+      - "9c8602c7-6108-4df7-a569-692b06b1e630" # web
+      - "bd97d99d-f52d-4827-84d5-3760cbc2c8ea" # api
+      - "00d164bd-2d3d-4d62-8280-e507637def73" # mcp
+
 service:
+  extensions: [bearertokenauth/server] # Adjust or remove the auth settings as needed.
   telemetry:
     logs:
       level: "debug"
