@@ -68,6 +68,13 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 - Ensure network connectivity between the collector and your Elastic instance.
 - Validate your credentials and endpoint URLs in the configuration file.
 
+## 🌐 Community & Support
+
+- 🤝 Contributing Guide – see [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+- 🤗 Code of Conduct – see [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
+- 🆘 Support Guide – see [SUPPORT.md](.github/SUPPORT.md)
+- 🔒 Security Policy – see [SECURITY.md](.github/SECURITY.md)
+
 ## 📄 License
 
 This project is licensed under the terms of the repository's main LICENSE file.
