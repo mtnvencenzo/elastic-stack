@@ -21,7 +21,12 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 
 > The setup in this repo is geared for local development usage and should not be considered for production without adjustments.
 
-1. **Start the Elastic ELK stack services:**
+### 1. Create local directories for persistent data:
+```bash
+mkdir -p "${HOME}/mnt/elastic-stack/elasticsearch-data"
+```
+
+### 2. Start the Elastic ELK stack services:
 
 	```bash
 	docker compose -p elastic-stack -f docker-compose.yml up -d
@@ -45,7 +50,7 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 	docker compose -p elastic-stack -f docker-compose.yml up -d --force-recreate --no-deps --build <service_name>
 	```
 
-3. **Send Telemetry Data:**
+### 3. Send Telemetry Data:
 	- Point your application(s) to the Open Telemetry Collector endpoint (as defined in `otel-collector-config.yml`).
       - http://localhost:4317 (when outside the compose network)
       - http://otel-collector:4317 (when inside the compose network)
