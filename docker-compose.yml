@@ -8,7 +8,8 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.enrollment.enabled=false
       - bootstrap.memory_lock=true # Disable swapping
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g # Adjust heap size as needed
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g # Adjust heap size as needed
+    mem_limit: 4G
     ports:
       - "9200:9200"
     restart: unless-stopped
@@ -28,7 +29,7 @@ services:
         soft: 65536
         hard: 65536
     volumes:
-      - "${HOME}/mnt/elastic-stack/elasticsearch-data:/usr/share/elasticsearch/data" # Named volume for data
+      - vol_elasticsearch:/usr/share/elasticsearch/data
     networks:
       - elastic-network
 
@@ -89,3 +90,6 @@ services:
 networks:
   elastic-network:
     driver: bridge
+
+volumes:
+  vol_elasticsearch:
