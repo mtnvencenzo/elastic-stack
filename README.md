@@ -25,10 +25,10 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 ### 1. Start the Elastic ELK stack services:
 
 	```bash
-	docker compose -p elastic-stack -f docker-compose.yml up -d
+	docker compose -f docker-compose.yml up -d
 
 	# Or if the containers have already been created
-	docker compose -p elastic-stack -f docker-compose.yml start
+	docker compose -f docker-compose.yml start
 
 	```
 
@@ -36,14 +36,14 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 
 	To bring the compose down, use this command
 	```bash
-	docker compose -p elastic-stack -f docker-compose.yml down -v
+	docker compose -f docker-compose.yml down -v
 
 	```
 
 	To force a rebuild and deploy of an individual container use this command
 
 	```
-	docker compose -p elastic-stack -f docker-compose.yml up -d --force-recreate --no-deps --build <service_name>
+	docker compose -f docker-compose.yml up -d --force-recreate --no-deps --build <service_name>
 	```
 
 ### 2. Send Telemetry Data:
@@ -64,7 +64,7 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 
 - Check container logs for errors:
   ```bash
-	docker compose -p elastic-stack -f docker-compose.yml logs
+	docker compose -f docker-compose.yml logs
   ```
 - Ensure network connectivity between the collector and your Elastic instance.
 - Validate your credentials and endpoint URLs in the configuration file.
