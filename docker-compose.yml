@@ -79,9 +79,13 @@ services:
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml # Mount your OTel Collector config
+      - ./.certs/otel-collector/otel-collector.crt:/certs/otel-collector.crt:ro
+      - ./.certs/otel-collector/otel-collector.key:/certs/otel-collector.key:ro
     ports:
-      - "4317:4317" # OTLP gRPC receiver
-      - "4318:4318" # OTLP Http receiver
+      - "4317:4317"   # OTLP gRPC receiver (Insecure)
+      - "50051:50051" # OTLP gRPC receiver (Secure)
+      - "4318:4318"   # OTLP Http receiver (Insecure)
+      - "50052:50052" # OTLP Http receiver (Secure)
     restart: unless-stopped
     depends_on:
       - apm-server

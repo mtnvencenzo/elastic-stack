@@ -43,7 +43,7 @@ This repo contains a common docker compose setup for the Elastic Stack using Ela
 	To force a rebuild and deploy of an individual container use this command
 
 	```
-	docker compose -f docker-compose.yml up -d --force-recreate --no-deps --build <service_name>
+	docker compose up -d --force-recreate --no-deps --build <service_name>
 	```
 
 ### 2. Send Telemetry Data:

@@ -1,18 +1,40 @@
 # otel-collector-config.yml
 receivers:
-  # Accepts data from OpenTelemetry-instrumented services via OTLP over gRPC and HTTP.
-  otlp:
+  # Accepts insecure (non-tls) data from OpenTelemetry-instrumented services via OTLP over gRPC and HTTP.
+  otlp/insecure:
     protocols:
       grpc:
         endpoint: "0.0.0.0:4317"
-        auth: # Adjust or remove the auth settings as needed.
+        auth:
           authenticator: bearertokenauth/server
       http:
         endpoint: "0.0.0.0:4318"
-        auth: # Adjust or remove the auth settings as needed.
+        auth:
           authenticator: bearertokenauth/server
         cors:
-          allowed_origins: ["https://localhost:4001"] # Adjust or remove the cors settings as needed.
+          allowed_origins: ["https://localhost:4001"]
+          allowed_headers: ["*"]
+          max_age: 600
+
+  # Accepts secure (tls) data from OpenTelemetry-instrumented services via OTLP over gRPC and HTTP.
+  otlp/secure:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:50051"
+        auth:
+          authenticator: bearertokenauth/server
+        tls:
+          cert_file: "/certs/otel-collector.crt"
+          key_file: "/certs/otel-collector.key"
+      http:
+        endpoint: "0.0.0.0:50052"
+        auth:
+          authenticator: bearertokenauth/server
+        tls:
+          cert_file: "/certs/otel-collector.crt"
+          key_file: "/certs/otel-collector.key"
+        cors:
+          allowed_origins: ["https://localhost:4001"]
           allowed_headers: ["*"]
           max_age: 600
 
@@ -40,9 +62,12 @@ exporters:
 extensions:
   bearertokenauth/server: # Adjust or remove the auth settings as needed.
     tokens:
-      - "9c8602c7-6108-4df7-a569-692b06b1e630" # web
-      - "bd97d99d-f52d-4827-84d5-3760cbc2c8ea" # api
-      - "00d164bd-2d3d-4d62-8280-e507637def73" # mcp
+      - "9c8602c7-6108-4df7-a569-692b06b1e630" # 1
+      - "bd97d99d-f52d-4827-84d5-3760cbc2c8ea" # 2
+      - "00d164bd-2d3d-4d62-8280-e507637def73" # 3
+      - "ad48fafc-3bf1-40d8-ae9c-89a42c5dcc06" # 4
+      - "c2969966-8d8c-4c7c-a4ae-e3b7d491aa24" # 5
+      - "e1851dfc-357a-4908-bda5-a68861d4648a" # 6
 
 service:
   extensions: [bearertokenauth/server] # Adjust or remove the auth settings as needed.
@@ -51,14 +76,14 @@ service:
       level: "debug"
   pipelines:
     traces:
-      receivers: [otlp]
+      receivers: [otlp/insecure, otlp/secure]
       processors: [batch]
       exporters: [otlp/elastic]
     metrics:
-      receivers: [otlp, hostmetrics]
+      receivers: [otlp/insecure, otlp/secure, hostmetrics]
       processors: [batch]
       exporters: [otlp/elastic]
     logs:
-      receivers: [otlp]
+      receivers: [otlp/insecure, otlp/secure]
       processors: [batch]
       exporters: [otlp/elastic]
