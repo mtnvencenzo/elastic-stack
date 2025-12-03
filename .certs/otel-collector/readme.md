@@ -17,7 +17,7 @@ certutil -d sql:$HOME/.pki/nssdb -L | grep otel-collector
 # 5. Optionally convert to a pfx for use with .net and kestrel
 openssl pkcs12 -export -out otel-collector.pfx -inkey otel-collector.key -in otel-collector.crt -passout pass:password
 
-
+# 6. Make sure everythings readable by all users
 chmod 644 ./otel-collector.crt
 chmod 644 ./otel-collector.key
 chmod 644 ./otel-collector.pfx
