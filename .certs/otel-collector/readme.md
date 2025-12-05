@@ -14,7 +14,7 @@ certutil -d sql:$HOME/.pki/nssdb -A -t "CP,CP," -n "otel-collector" -i ./otel-co
 # 4. Verify it was added:
 certutil -d sql:$HOME/.pki/nssdb -L | grep otel-collector
 
-# 5. Optionally convert to a pfx for use with .net and kestrel
+# 5. Optionally convert to a pfx
 openssl pkcs12 -export -out otel-collector.pfx -inkey otel-collector.key -in otel-collector.crt -passout pass:password
 
 # 6. Make sure everythings readable by all users
