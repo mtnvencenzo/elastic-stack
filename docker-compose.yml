@@ -89,8 +89,8 @@ services:
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml # Mount your OTel Collector config
-      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs}/docker-local.crt:/certs/docker-local.crt:ro
-      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs}/docker-local.key:/certs/docker-local.key:ro
+      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs/certs}/docker-local.crt:/certs/docker-local.crt:ro
+      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs/certs}/docker-local.key:/certs/docker-local.key:ro
     ports:
       - "4317:4317"   # OTLP gRPC receiver (Insecure)
       - "50051:50051" # OTLP gRPC receiver (Secure)
