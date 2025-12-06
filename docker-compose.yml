@@ -1,8 +1,9 @@
 name: elastic-stack
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3
+    hostname: elasticsearch.docker.local
     container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.3
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false # For development, disable security
@@ -32,13 +33,16 @@ services:
     volumes:
       - vol_elasticsearch:/usr/share/elasticsearch/data
     networks:
-      - elastic-network
+      elastic-network:
+        aliases:
+          - elasticsearch.docker.local
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:9.1.3
+    hostname: kibana.docker.local
     container_name: kibana
+    image: docker.elastic.co/kibana/kibana:9.1.3
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch.docker.local:9200
       - xpack.security.enabled=false # For development, disable security
     ports:
       - "5601:5601"
@@ -53,14 +57,17 @@ services:
       elasticsearch:
         condition: service_healthy
     networks:
-      - elastic-network
+      elastic-network:
+        aliases:
+          - kibana.docker.local
 
   apm-server:
-    image: docker.elastic.co/apm/apm-server:9.1.3
+    hostname: apm-server.docker.local
     container_name: apm-server
+    image: docker.elastic.co/apm/apm-server:9.1.3
     environment:
-      - APM_SERVER_KIBANA_HOST=kibana:5601
-      - APM_SERVER_OUTPUT_ELASTICSEARCH_HOSTS=elasticsearch:9200
+      - APM_SERVER_KIBANA_HOST=kibana.docker.local:5601
+      - APM_SERVER_OUTPUT_ELASTICSEARCH_HOSTS=elasticsearch.docker.local:9200
       - xpack.security.enabled=false # For development, disable security
     ports:
       - "8200:8200" # APM Server intake port
@@ -71,16 +78,19 @@ services:
       kibana:
         condition: service_healthy # Technically not dependent ubt gives a visual indicator that Kibana is up (its slow to start)
     networks:
-      - elastic-network
+      elastic-network:
+        aliases:
+          - apm-server.docker.local
 
   otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.134.1 
+    hostname: otel-collector.docker.local
     container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib:0.134.1 
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml # Mount your OTel Collector config
-      - ./.certs/otel-collector/otel-collector.crt:/certs/otel-collector.crt:ro
-      - ./.certs/otel-collector/otel-collector.key:/certs/otel-collector.key:ro
+      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs}/docker-local.crt:/certs/docker-local.crt:ro
+      - ${DOCKER_LOCAL_CERT_PATH:-$HOME/Github/docker-local-certs}/docker-local.key:/certs/docker-local.key:ro
     ports:
       - "4317:4317"   # OTLP gRPC receiver (Insecure)
       - "50051:50051" # OTLP gRPC receiver (Secure)
@@ -90,7 +100,9 @@ services:
     depends_on:
       - apm-server
     networks:
-      - elastic-network
+      elastic-network:
+        aliases:
+          - otel-collector.docker.local
 
 networks:
   elastic-network:
