@@ -12,28 +12,6 @@ receivers:
         auth:
           authenticator: bearertokenauth/server
         cors:
-          allowed_origins: ["https://localhost:4001"]
-          allowed_headers: ["*"]
-          max_age: 600
-
-  # Accepts secure (tls) data from OpenTelemetry-instrumented services via OTLP over gRPC and HTTP.
-  otlp/secure:
-    protocols:
-      grpc:
-        endpoint: "0.0.0.0:50051"
-        auth:
-          authenticator: bearertokenauth/server
-        tls:
-          cert_file: "/certs/docker-local.crt"
-          key_file: "/certs/docker-local.key"
-      http:
-        endpoint: "0.0.0.0:50052"
-        auth:
-          authenticator: bearertokenauth/server
-        tls:
-          cert_file: "/certs/docker-local.crt"
-          key_file: "/certs/docker-local.key"
-        cors:
           allowed_origins: ["https://localhost:4001", "https://localhost:4002"]
           allowed_headers: ["*"]
           max_age: 600
@@ -55,7 +33,7 @@ processors:
 exporters:
   # The Elastic exporter translates OpenTelemetry data to Elastic's protocol.
   otlp/elastic:
-    endpoint: "http://apm-server.docker.local:8200" # Target the APM Server within the Docker network.
+    endpoint: "http://apm-server:8200" # Target the APM Server within the Docker network.
     tls:
       insecure: true # Use this for local testing only; use proper TLS in production.
 
@@ -76,14 +54,14 @@ service:
       level: "debug"
   pipelines:
     traces:
-      receivers: [otlp/insecure, otlp/secure]
+      receivers: [otlp/insecure]
       processors: [batch]
       exporters: [otlp/elastic]
     metrics:
-      receivers: [otlp/insecure, otlp/secure, hostmetrics]
+      receivers: [otlp/insecure, hostmetrics]
       processors: [batch]
       exporters: [otlp/elastic]
     logs:
-      receivers: [otlp/insecure, otlp/secure]
+      receivers: [otlp/insecure]
       processors: [batch]
       exporters: [otlp/elastic]
