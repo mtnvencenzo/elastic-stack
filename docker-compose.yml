@@ -10,8 +10,7 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.enrollment.enabled=false
       - bootstrap.memory_lock=true # Disable swapping
-      - ES_JAVA_OPTS=-Xms2g -Xmx2g # Adjust heap size as needed
-    mem_limit: 4G
+      - ES_JAVA_OPTS=-Xms2g -Xmx6g # Adjust heap size as needed
     ports:
       - "9200:9200"
     restart: unless-stopped
