@@ -10,15 +10,15 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.enrollment.enabled=false
       - bootstrap.memory_lock=true # Disable swapping
-      - ES_JAVA_OPTS=-Xms2g -Xmx6g # Adjust heap size as needed
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g" # Adjust heap size as needed
     ports:
       - "9200:9200"
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health?wait_for_status=yellow"]
-      interval: 10s
-      timeout: 10s
-      retries: 20
+      interval: 20s
+      timeout: 15s
+      retries: 30
       start_period: 20s
     ulimits:
       # Required for Elasticsearch to function correctly
