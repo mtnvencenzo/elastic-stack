@@ -54,9 +54,6 @@ extensions:
 
 service:
   extensions: [bearertokenauth/server] # Adjust or remove the auth settings as needed.
-  telemetry:
-    logs:
-      level: "debug"
   pipelines:
     traces:
       receivers: [otlp/insecure]
